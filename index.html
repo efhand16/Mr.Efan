@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AvTer Bali Tour – Bali Tour Packages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b3a5b;--sea:#1769aa;--sand:#f6f1e7;--gold:#e8a33d;--ink:#17222d;--mute:#6b7782;--card:#fff;--wa:#1f9d55}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--sand);color:var(--ink);padding-bottom:40px}
+header{background:var(--navy);color:#fff;padding:28px 18px 70px}
+header h1{font-size:1.6rem;font-weight:800;line-height:1.2}
+header p{margin-top:6px;color:#cfe3f3;font-size:.95rem}
+.wrap{max-width:980px;margin:0 auto}
+.search{margin:-28px 16px 0;position:relative}
+.search input{width:100%;padding:15px 18px;border:0;border-radius:14px;font:inherit;font-size:1rem;box-shadow:0 6px 18px rgba(11,58,91,.18)}
+.search input:focus{outline:3px solid var(--gold)}
+.bar{display:flex;justify-content:space-between;align-items:center;margin:22px 18px 12px}
+.bar h2{font-size:1.15rem}
+.bar span{color:var(--mute);font-size:.95rem}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:0 16px 6px}
+.chip{flex:none;border:1.5px solid var(--sea);background:transparent;color:var(--sea);padding:8px 14px;border-radius:99px;font:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--sea);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:14px 16px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--card);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 10px rgba(11,58,91,.1)}
+.pic{height:110px;display:flex;align-items:center;justify-content:center;font-size:3rem}
+.body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:5px;flex:1}
+.body h3{font-size:1rem;line-height:1.25}
+.dur{color:var(--mute);font-size:.85rem}
+.desc{font-size:.85rem;color:#3d4b57;line-height:1.4;flex:1}
+.price{color:var(--sea);font-weight:800;font-size:1.1rem;margin-top:4px}
+.price small{font-weight:600;color:var(--mute);font-size:.75rem}
+.pesan{margin-top:8px;display:block;text-align:center;text-decoration:none;background:var(--wa);color:#fff;font-weight:700;padding:11px;border-radius:12px}
+.pesan:focus-visible{outline:3px solid var(--gold)}
+.kosong{grid-column:1/-1;text-align:center;color:var(--mute);padding:30px 0}
+footer{text-align:center;color:var(--mute);font-size:.85rem;padding:10px 18px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>AvTer Bali Tour</h1>
+<p>Bali tour packages with local guides. Choose a package, then book on WhatsApp.</p>
+</div></header>
+
+<div class="wrap">
+<div class="search"><input id="cari" type="search" placeholder="Search packages or places..." aria-label="Search packages"></div>
+<div class="bar"><h2>Tour Packages</h2><span id="jumlah"></span></div>
+<div class="chips" id="chips"></div>
+<main class="grid" id="grid"></main>
+<footer>Prices are per person, minimum 2 participants. Prices may change by season.</footer>
+</div>
+
+<script>
+// ====== EDIT HERE ======
+var NOMOR_WA = "628979158517"; // international format, without the leading 0
+var PAKET = [
+ {nama:"Ubud Culture & Nature", durasi:"1 day", harga:600000, kat:"1 Day", ikon:"🌿", warna:"#cfe8d5", isi:"Tegallalang rice terraces, Monkey Forest, Tirta Empul, Ubud art market."},
+ {nama:"Nusa Penida Day Trip", durasi:"1 day", harga:850000, kat:"1 Day", ikon:"🏝️", warna:"#cde6f5", isi:"Kelingking, Angel Billabong, Broken Beach, Crystal Bay."},
+ {nama:"Kintamani & Tirta Empul", durasi:"1 day", harga:650000, kat:"1 Day", ikon:"🌋", warna:"#f5dcc4", isi:"Mount Batur view, Balinese coffee, Penglipuran village."},
+ {nama:"Uluwatu Sunset & Kecak", durasi:"1 day", harga:650000, kat:"1 Day", ikon:"🌅", warna:"#fbd9b8", isi:"Uluwatu Temple, Pandawa Beach, Kecak dance, seafood dinner."},
+ {nama:"Bedugul & Tanah Lot", durasi:"1 day", harga:650000, kat:"1 Day", ikon:"⛩️", warna:"#d8e4f5", isi:"Ulun Danu Beratan, Jatiluwih, Tanah Lot Temple at sunset."},
+ {nama:"Lovina Dolphin Sunrise", durasi:"1 day", harga:700000, kat:"1 Day", ikon:"🐬", warna:"#c9ebf0", isi:"Sunrise dolphin watching, Gitgit and Banyumala waterfalls."},
+ {nama:"Sidemen & Tenganan", durasi:"1 day", harga:675000, kat:"1 Day", ikon:"🌾", warna:"#e6ecc7", isi:"Sidemen rice fields, Tenganan village, Taman Ujung, Tirta Gangga."},
+ {nama:"Ayung Rafting & Ubud", durasi:"1 day", harga:750000, kat:"Adventure", ikon:"🚣", warna:"#d4efe3", isi:"Ayung River rafting, lunch, and a tour of Ubud."},
+ {nama:"Bali 3 Days 2 Nights", durasi:"3 days 2 nights", harga:2750000, kat:"Multi-Day", ikon:"🌺", warna:"#f7d4dc", isi:"Ubud, Kintamani, Uluwatu, Tanah Lot. Hotel and breakfast included."},
+ {nama:"Bali 5 Days 4 Nights", durasi:"5 days 4 nights", harga:4750000, kat:"Multi-Day", ikon:"🏖️", warna:"#fde6b8", isi:"South Bali, Ubud, Nusa Penida, Bedugul. Hotel and transport included."}
+];
+// ==========================
+
+var grid=document.getElementById("grid"),cari=document.getElementById("cari"),chips=document.getElementById("chips"),jumlah=document.getElementById("jumlah");
+var kategori="All";
+function rp(n){return "Rp "+n.toLocaleString("en-US")}
+function render(){
+ var q=cari.value.toLowerCase().trim();
+ var hasil=PAKET.filter(function(p){
+  return (kategori==="All"||p.kat===kategori)&&(p.nama+" "+p.isi).toLowerCase().indexOf(q)>-1;
+ });
+ jumlah.textContent=hasil.length+" packages";
+ if(!hasil.length){grid.innerHTML='<p class="kosong">No packages found. Try another keyword.</p>';return}
+ grid.innerHTML=hasil.map(function(p){
+  var pesan=encodeURIComponent("Hello, I would like to book the "+p.nama+" package"+" ("+p.durasi+").");
+  return '<article class="card"><div class="pic" style="background:'+p.warna+'">'+p.ikon+'</div>'+
+  '<div class="body"><h3>'+p.nama+'</h3><div class="dur">'+p.durasi+'</div>'+
+  '<p class="desc">'+p.isi+'</p>'+
+  '<div class="price">'+rp(p.harga)+' <small>/person</small></div>'+
+  '<a class="pesan" href="https://wa.me/'+NOMOR_WA+'?text='+pesan+'" target="_blank" rel="noopener">Book via WhatsApp</a></div></article>';
+ }).join("");
+}
+["All","1 Day","Adventure","Multi-Day"].forEach(function(k){
+ var b=document.createElement("button");
+ b.className="chip";b.textContent=k;b.setAttribute("aria-pressed",k==="All");
+ b.onclick=function(){kategori=k;[].forEach.call(chips.children,function(c){c.setAttribute("aria-pressed",c===b)});render()};
+ chips.appendChild(b);
+});
+cari.addEventListener("input",render);
+render();
+</script>
+</body>
+</html>
